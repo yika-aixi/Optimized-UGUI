@@ -25,6 +25,24 @@ namespace CabinIcarus.OptimizedUGUI
 //            {
 //                return SkipType.ButCheckOffspring;
 //            }
+        public SkipType CheckOffspring(string path, RectTransform root, RectTransform obj)
+        {
+            //下拉,不处理模板
+            if (root.GetComponent<Dropdown>())
+            {
+                if (obj.name == "Template")
+                {
+                    return SkipType.SelfAndOffspring;
+                }
+            }
+            else if (root.GetComponent<Toggle>())
+            {
+                if (!obj.GetComponent<Text>())
+                {
+                    return SkipType.SelfAndOffspring;
+                }
+            }
+
 
             return SkipType.None;
         }
