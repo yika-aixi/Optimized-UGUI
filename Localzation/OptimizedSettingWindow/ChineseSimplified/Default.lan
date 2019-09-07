@@ -4,3 +4,5 @@ CloseToRectMaskTooltip	Mask会改变材质并且需要Image组件,会产生2个d
 CheckHelper	检查器
 CheckHelperTooltip	如需一些自定义操作实现{0}接口
 NoCheckHelper	没有发现检查器
+IncludeInactive	检擦隐藏物体
+IncludeInactiveTooltip	检查隐藏物体,不建议开启,因为会出很多问题,除非你有自己的策略,默认是关闭

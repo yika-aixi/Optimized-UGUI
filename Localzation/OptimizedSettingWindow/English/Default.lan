@@ -4,3 +4,5 @@ CloseToRectMaskTooltip	Mask will change the material and need the Image componen
 CheckHelper	Check Helper
 CheckHelperTooltip	Custom operation, please implement {0} interface
 NoCheckHelper	Did not find Check Helper
+IncludeInactive	Check Not Inactive
+IncludeInactiveTooltip	Check Not Inactive,Unless you have your own strategy, there will be many problems, the default is off
