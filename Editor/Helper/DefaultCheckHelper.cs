@@ -21,10 +21,16 @@ namespace CabinIcarus.OptimizedUGUI
             }
             
             // 下拉,跳过但是需要检查子孙,后面
-//            if (obj.GetComponent<Dropdown>())
-//            {
-//                return SkipType.ButCheckOffspring;
-//            }
+            if (obj.GetComponent<Dropdown>()||
+                //开关,Label需要处理
+                obj.GetComponent<Toggle>())
+            {
+                return SkipType.ButCheckOffspring;
+            }
+
+            return SkipType.None;
+        }
+
         public SkipType CheckOffspring(string path, RectTransform root, RectTransform obj)
         {
             //下拉,不处理模板
@@ -55,7 +61,7 @@ namespace CabinIcarus.OptimizedUGUI
         /// Text组件默认将Z轴调整到1,最后绘制
         /// </summary>
         /// <param name="text"></param>
-        public void TextHandle(RectTransform text)
+        public virtual void TextHandle(RectTransform text)
         {
             var anchoredPosition3D = text.anchoredPosition3D;
             
