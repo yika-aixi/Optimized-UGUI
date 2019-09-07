@@ -122,7 +122,7 @@ namespace CabinIcarus.OptimizedUGUI
         private static List<RectTransform> _notTextUI = new List<RectTransform>();
         private static List<RectTransform> _textUI = new List<RectTransform>();
 
-        [MenuItem("GameObject/Icarus/Optimized", false, 1001)]
+        [MenuItem("GameObject/Icarus/Optimized", false, -99999)]
         static void Optimized()
         {
             var ui = Selection.activeTransform;
