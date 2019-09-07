@@ -1,0 +1,6 @@
+English
+CloseToRectMask	Disable Mask to RectMask
+CloseToRectMaskTooltip	Mask will change the material and need the Image component, it will generate 2 dc, and interrupt the batch, it is recommended to close, the default is off
+CheckHelper	Check Helper
+CheckHelperTooltip	Custom operation, please implement {0} interface
+NoCheckHelper	Did not find Check Helper

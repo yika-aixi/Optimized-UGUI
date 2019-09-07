@@ -1,0 +1,6 @@
+ChineseSimplified
+CloseToRectMask	禁用Mask转RectMask
+CloseToRectMaskTooltip	Mask会改变材质并且需要Image组件,会产生2个dc,并打断合批,建议关闭,默认为关闭
+CheckHelper	检查器
+CheckHelperTooltip	如需一些自定义操作实现{0}接口
+NoCheckHelper	没有发现检查器
