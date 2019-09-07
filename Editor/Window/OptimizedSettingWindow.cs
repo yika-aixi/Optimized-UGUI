@@ -167,10 +167,11 @@ namespace CabinIcarus.OptimizedUGUI
 
         private static GameObject _getNewParent(RectTransform notText,Transform root)
         {
-            //todo 设置之前,如果有父级
+            //存在父级,同时不是Root
             if (notText.parent && notText.parent != root)
             {
-                //todo 需要创建一个物体来处理RectTransform的锚点,否则会错乱,要保证锚点可以定位准确
+                //克隆一个一样设置的父级
+                //保证ui不出问题
                 var parent = notText.parent;
                 var  newParent = new GameObject(parent.name);
                 newParent.transform.SetParent(root,false);
