@@ -130,57 +130,56 @@ namespace CabinIcarus.OptimizedUGUI
             var checkHelper = (ICheckHelper) Activator.CreateInstance(Type.GetType(GetValue<string>(CheckHelper)));
 
             _childHandle(ui,ui,checkHelper);
-            
-            var objs = ui.GetComponentsInChildren<RectTransform>(true);
-//            
-//            foreach (var rectTransform in objs)
-//            {
-//                var skipType = checkHelper.CheckKSkip(GameobjectUtil.GetPath(ui.gameObject, rectTransform.gameObject),
-//                    rectTransform.gameObject);
-//
-//                if ()
-//                {
-//                    
-//                }
-//                
-//                if (rectTransform.GetComponent<Text>())
-//                {
-//                    _textUI.Add(rectTransform);
-//                }
-//                else
-//                {
-//                    _notTextUI.Add(rectTransform);
-//                }
-//            }
 
             Undo.RecordObject(ui,$"Optimized {ui.name}");
+
+            GameObject go = null;
             
-            GameObject go = new GameObject("Not Text UI");
-            go.AddComponent<RectTransform>();//.Maximize();
-            go.transform.SetParent(ui,false);
-           
             foreach (var notText in _notTextUI)
             {
-                //todo 设置之前,如果有父级
-                if (notText.parent)
+                go = _getNewParent(notText,ui);
+
+                if (!go)
                 {
-                    //todo 需要创建一个物体来处理RectTransform的锚点,否则会错乱,要保证锚点可以定位准确
+                    continue;
                 }
                 
+                Undo.SetTransformParent(notText.transform,go.transform,"Set Parent");
                 notText.SetParent(go.transform,false);
             }
             
-            // Text UI
-            
-            go = new GameObject("Text UI");
-            go.AddComponent<RectTransform>();//.Maximize();
-            go.transform.SetParent(ui,false);
-            
             foreach (var text in _textUI)
             {
+                go = _getNewParent(text,ui);
+                
+                if (!go)
+                {
+                    continue;
+                }
+                
+                Undo.SetTransformParent(text.transform,go.transform,"Set Parent");
                 text.SetParent(go.transform,false);
                 checkHelper.TextHandle(text);
             }
+            
+            Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
+        }
+
+        private static GameObject _getNewParent(RectTransform notText,Transform root)
+        {
+            //todo 设置之前,如果有父级
+            if (notText.parent && notText.parent != root)
+            {
+                //todo 需要创建一个物体来处理RectTransform的锚点,否则会错乱,要保证锚点可以定位准确
+                var parent = notText.parent;
+                var  newParent = new GameObject(parent.name);
+                newParent.transform.SetParent(root,false);
+                newParent.AddComponent<RectTransform>().CopyTarget(parent as RectTransform);
+                Undo.RegisterCreatedObjectUndo(newParent,"Create New Parent");
+                return newParent;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -189,22 +188,36 @@ namespace CabinIcarus.OptimizedUGUI
         /// <param name="root">根节点</param>
         /// <param name="currentChild">当前子孙</param>
         /// <param name="checkHelper">检查器</param>
-        private static void _childHandle(Transform root, Transform currentChild, ICheckHelper checkHelper)
+        /// <param name="isCheckOffspring">是否是检查子孙</param>
+        private static void _childHandle(Transform root, Transform currentChild, ICheckHelper checkHelper,bool isCheckOffspring = false)
         {
             for (var i = 0; i < currentChild.childCount; i++)
             {
                 var child = currentChild.GetChild(i);
-
+                
+                //隐藏物体
                 if (!child.gameObject.activeSelf)
                 {
+                    //如果开启检查
                     if (!GetValue<bool>(IncludeInactive))
                     {
                         return;
                     }
                 }
 
-                var skipType = checkHelper.CheckKSkip(GameobjectUtil.GetPath(root.gameObject, child.gameObject),
-                    child as RectTransform);
+                var path = GameobjectUtil.GetPath(root.gameObject, child.gameObject);
+                
+                SkipType skipType;
+                
+                if (!isCheckOffspring)
+                {
+                    skipType  = checkHelper.CheckKSkip(path,
+                        child as RectTransform);
+                }
+                else
+                {
+                    skipType = checkHelper.CheckOffspring(path, (RectTransform) root, (RectTransform) child);
+                }
 
                 switch (skipType)
                 {
@@ -219,7 +232,10 @@ namespace CabinIcarus.OptimizedUGUI
                         
                         break;
                     case SkipType.SelfAndOffspring:
-                        return;
+                        break;
+                    case SkipType.ButCheckOffspring:
+                        _childHandle(child,child,checkHelper,true);
+                        break;
                 }
             }
         }
