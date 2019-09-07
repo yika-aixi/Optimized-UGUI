@@ -27,7 +27,7 @@ namespace CabinIcarus.OptimizedUGUI
         SelfAndOffspring,
         
         /// <summary>
-        /// 跳过但是需要检查子孙
+        /// 跳过但是需要检查子孙,注意子孙不会被添加到处理列表,只会被处理,用于分析
         /// </summary>
         ButCheckOffspring,
     }
@@ -44,6 +44,15 @@ namespace CabinIcarus.OptimizedUGUI
         /// <param name="obj">物体</param>
         /// <returns></returns>
         SkipType CheckKSkip(string path,RectTransform obj);
+
+        /// <summary>
+        /// 被检查的子孙,
+        /// </summary>
+        /// <param name="path">相对路径</param>
+        /// <param name="root">子孙所属物体</param>
+        /// <param name="obj">物体</param>
+        /// <returns></returns>
+        SkipType CheckOffspring(string path,RectTransform root,RectTransform obj);
 
         /// <summary>
         /// 当物体路径被修改时触发
