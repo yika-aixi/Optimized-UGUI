@@ -15,7 +15,8 @@ namespace CabinIcarus.OptimizedUGUI
         public virtual SkipType CheckKSkip(string path, RectTransform obj)
         {
             // 存在动画,跳过自身和子孙
-            if (obj.GetComponent<Animator>())
+            if (obj.GetComponent<Animator>() ||
+                obj.GetComponent<Scrollbar>())
             {
                 return SkipType.SelfAndOffspring;
             }
@@ -23,7 +24,11 @@ namespace CabinIcarus.OptimizedUGUI
             // 下拉,跳过但是需要检查子孙,后面
             if (obj.GetComponent<Dropdown>()||
                 //开关,Label需要处理
-                obj.GetComponent<Toggle>())
+                obj.GetComponent<Toggle>() ||
+                //滑条,需要处理背景
+                obj.GetComponent<Slider>() ||
+                //滑动视图,需要进行检查
+                obj.GetComponent<ScrollRect>())
             {
                 return SkipType.ButCheckOffspring;
             }
@@ -47,6 +52,18 @@ namespace CabinIcarus.OptimizedUGUI
                 {
                     return SkipType.SelfAndOffspring;
                 }
+            }
+            else if (root.GetComponent<Slider>())
+            {
+                if (obj.name != "Background")
+                {
+                    return SkipType.SelfAndOffspring;
+                }    
+            }
+            else if (root.GetComponent<ScrollRect>())
+            {
+                //跳过,但是需要处理Mask
+                return SkipType.Self;
             }
 
 
