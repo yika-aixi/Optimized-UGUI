@@ -125,6 +125,7 @@ namespace CabinIcarus.OptimizedUGUI
         [MenuItem("GameObject/Icarus/Optimized", false, -99999)]
         static void Optimized()
         {
+            _clearList();
             var ui = Selection.activeTransform;
 
             var checkHelper = (ICheckHelper) Activator.CreateInstance(Type.GetType(GetValue<string>(CheckHelper)));
@@ -163,6 +164,12 @@ namespace CabinIcarus.OptimizedUGUI
             }
             
             Undo.CollapseUndoOperations(Undo.GetCurrentGroup());
+        }
+
+        private static void _clearList()
+        {
+            _notTextUI.Clear();
+            _textUI.Clear();
         }
 
         private static GameObject _getNewParent(RectTransform notText,Transform root)
