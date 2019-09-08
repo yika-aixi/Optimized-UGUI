@@ -245,6 +245,19 @@ namespace CabinIcarus.OptimizedUGUI
                         _childHandle(child,child,checkHelper,true);
                         break;
                 }
+
+                //Mask
+                if (child.GetComponent<Mask>())
+                {
+                    //开启了转换
+                    if (!GetValue<bool>(ToRectKey))
+                    {
+                        DestroyImmediate(child.GetComponent<Mask>());
+                        DestroyImmediate(child.GetComponent<Image>());
+                        
+                        child.gameObject.AddComponent<RectMask2D>();
+                    }                        
+                }
             }
         }
 
