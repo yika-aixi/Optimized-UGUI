@@ -236,7 +236,7 @@ namespace CabinIcarus.OptimizedUGUI
                             _addList(child);
                         }
 
-                        _childHandle(root, child, checkHelper);
+                        _childHandle(root, child, checkHelper,isCheckOffspring);
                         
                         break;
                     case SkipType.SelfAndOffspring:
